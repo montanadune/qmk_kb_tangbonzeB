@@ -3,35 +3,54 @@
  *
  * SPDX-License-Identifier: MIT
  */
- 
-#include "keyball61.dtsi"
 
-#include "keyball61.dtsi"
+// スプリット用の共通ファイルを読み込まず、このファイル単体で右手専用に定義します
+#include <dt-bindings/zmk/matrix_transform.h>
 
-// ==== ここから以下の2行を追加 ====
-&default_transform { col-offset = <55>; }; // 列の「7列ずらし」を完全にゼロに戻す
-&kscan0 { status = "okay"; };             // 右手側の物理スキャン回路をダイレクトに直結する
-// ==== ここまで ====
+/ {
+    chosen {
+        zmk,kscan = &kscan0;
+        zmk,matrix-transform = &default_transform;
+    };
 
+    // 右手単体の物理キー配列（29キー）を正確に処理するための変換マップ定義
+    default_transform: keymap_transform_0 {
+        compatible = "zmk,matrix-transform";
+        columns = <13>;
+        rows = <5>;
 
-&kscan0 {
-    wakeup-source;
-    row-gpios
-        = <&pro_micro 3 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-        , <&pro_micro 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-        , <&pro_micro 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-        , <&pro_micro 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-        , <&pro_micro 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-        ;
-    
-	col-gpios
-        = <&pro_micro 9  GPIO_ACTIVE_HIGH>
-        , <&pro_micro 8  GPIO_ACTIVE_HIGH>
-        , <&pro_micro 18 GPIO_ACTIVE_HIGH>
-	    , <&pro_micro 19 GPIO_ACTIVE_HIGH>
-		, <&pro_micro 20 GPIO_ACTIVE_HIGH>
-		, <&pro_micro 21 GPIO_ACTIVE_HIGH>
-		;
+        map = <
+            RC(0,7) RC(0,8) RC(0,9) RC(0,10) RC(0,11) RC(0,12)
+            RC(1,7) RC(1,8) RC(1,9) RC(1,10) RC(1,11) RC(1,12)
+            RC(2,7) RC(2,8) RC(2,9) RC(2,10) RC(2,11) RC(2,12)
+            RC(4,8) RC(3,7) RC(3,8) RC(3,9) RC(3,10) RC(3,11) RC(3,12)
+            RC(4,9) RC(4,10)                         RC(4,11) RC(4,12)
+        >;
+    };
+
+    kscan0: kscan {
+        compatible = "zmk,kscan-gpio-matrix";
+        label = "KSCAN";
+        wakeup-source;
+        diode-direction = "col2row";
+
+        row-gpios
+            = <&pro_micro 3 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            ;
+        
+        col-gpios
+            = <&pro_micro 9  GPIO_ACTIVE_HIGH>
+            , <&pro_micro 8  GPIO_ACTIVE_HIGH>
+            , <&pro_micro 18 GPIO_ACTIVE_HIGH>
+            , <&pro_micro 19 GPIO_ACTIVE_HIGH>
+            , <&pro_micro 20 GPIO_ACTIVE_HIGH>
+            , <&pro_micro 21 GPIO_ACTIVE_HIGH>
+            ;
+    };
 };
 
 &pinctrl {
@@ -63,13 +82,10 @@
 
     trackball: trackball@0 {
         status = "okay";
-        compatible = "zmk,pmw3610";
+        compatible = "cormoran,pmw3610"; // DYA最新のドライバ名に適合
         reg = <0>;
         spi-max-frequency = <2000000>;
         irq-gpios = <&gpio1 11 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-        automouse-layer = <4>;
-		scroll-layers = <5>;
-		snipe-layers = <6>;
     };
 };
 
@@ -112,12 +128,4 @@
         inversion-on;
         prechargep = <0x22>;
     };
-};
-
-/ {
-  trackball_listener {
-    compatible = "zmk,input-listener";
-    device = <&trackball>;
-
-  };
 };
