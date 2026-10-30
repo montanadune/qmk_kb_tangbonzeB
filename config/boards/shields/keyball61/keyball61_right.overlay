@@ -6,9 +6,13 @@
  
 #include "keyball61.dtsi"
 
-&default_transform {
-    col-offset = <7>;
-};
+#include "keyball61.dtsi"
+
+// ==== ここから以下の2行を追加 ====
+&default_transform { col-offset = <0>; }; // 列の「7列ずらし」を完全にゼロに戻す
+&kscan0 { status = "okay"; };             // 右手側の物理スキャン回路をダイレクトに直結する
+// ==== ここまで ====
+
 
 &kscan0 {
     wakeup-source;
