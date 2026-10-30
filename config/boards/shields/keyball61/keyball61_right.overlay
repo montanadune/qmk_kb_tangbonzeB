@@ -9,8 +9,14 @@
 
 / {
     chosen {
+        // 1. 物理スキャン回路を単体直結にする
         zmk,kscan = &kscan0;
-        zmk,matrix-transform = &default_transform;
+
+        // 2. ZMK Studioに必要な「物理レイアウト構造」を指定する
+        zmk,physical-layout = &keyball_physical_layout;
+
+        // 3. 【超重要】ZMK Studioビルドのエラー（static assertion）を解除する命令
+        /delete-property/ zmk,matrix-transform;
     };
 
     // 右手単体の物理キー配列（29キー）を正確に処理するための変換マップ定義
