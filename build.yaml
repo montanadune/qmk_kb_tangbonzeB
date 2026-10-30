@@ -4,7 +4,8 @@ include:
   - board: nice_nano_v2
     shield: keyball61_right
     snippet: studio-rpc-usb-uart
+    # 【修正】cmake-args をやめ、この右手ビルドの時だけ専用.confを合体させる指定にします
+    extra-confs:
+      - keyball61_right_onehand.conf
   - board: nice_nano_v2
     shield: settings_reset
-    # 【追加】右手だけを片手専用にするために、専用の設定ファイルを指定する
-    cmake-args: -DCONFIG_FILE_NAME=keyball61_right_onehand
