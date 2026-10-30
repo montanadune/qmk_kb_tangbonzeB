@@ -6,3 +6,5 @@ include:
     snippet: studio-rpc-usb-uart
   - board: nice_nano_v2
     shield: settings_reset
+    # 【追加】右手だけを片手専用にするために、専用の設定ファイルを指定する
+    cmake-args: -DCONFIG_FILE_NAME=keyball61_right_onehand
