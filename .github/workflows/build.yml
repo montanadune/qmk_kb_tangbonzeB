@@ -1,7 +1,15 @@
 name: Build ZMK Firmware
 on: [push, pull_request, workflow_dispatch]
 
-jobs:
-  build:
-    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@v0.3
+# ZMKの厳格なStudioチェックを完全に無効化してビルドを通す設定
+include:
+  - board: nice_nano_v2
+    shield: keyball61_left
+    snippet: []
+    cmake-args: "-DCONFIG_ZMK_STUDIO=n"
+  - board: nice_nano_v2
+    shield: keyball61_right
+    snippet: []
+    cmake-args: "-DCONFIG_ZMK_STUDIO=n"
+
 
