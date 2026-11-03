@@ -9,8 +9,10 @@
 
 / {
     chosen {
-        // 1. 物理スキャン回路を単体直結にする
-        zmk,kscan = &kscan0;
+// ==== ここから以下の2行を追加 ====
+&default_transform { col-offset = <0>; }; // 列の「7列ずらし」を完全にゼロに戻す
+&kscan0 { status = "okay"; };             // 右手側の物理スキャン回路をダイレクトに直結する
+// ==== ここまで ====
 
         // 2. ZMK Studioに必要な「物理レイアウト構造」を指定する
         zmk,physical-layout = &keyball_physical_layout;
